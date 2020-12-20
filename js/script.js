@@ -99,7 +99,8 @@ function searchBar() {
          }
       }
       if (newData.length == 0) {
-         alert("No Matches Found");
+         document.querySelector('.student-list').innerHTML = '<h1 style="font-weight: bold;">No Matches Found</h1>';
+         document.querySelector('.link-list').innerHTML = '';
       } else {
          addPagination(newData);
          showPage(newData, 1);
