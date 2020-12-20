@@ -13,17 +13,25 @@ function showPage(list, page) {
 
    for(let i = startIndex; i < endIndex; i++) {
       if (i >= startIndex && i <= endIndex) {
-         let listItem = document.createElement("LI");
-         listItem.className = "student-item cf";
-         listItem.innerHTML = `<div class="student-details">
-                                 <img class="avatar" src="${list[i].picture.large}" alt="Profile Picture">
-                                 <h3>${list[i].name.first} ${list[i].name.last}</h3>
-                                 <span class="email">${list[i].email}</span>
-                              </div>
-                              <div class="joined-details">
-                                 <span class="date">Joined ${list[i].registered.date}</span>
-                              </div>`;
-         studentList.appendChild(listItem);
+         try {
+            let listItem = document.createElement("LI");
+            listItem.className = "student-item cf";
+            listItem.innerHTML = `<div class="student-details">
+                                    <img class="avatar" src="${list[i].picture.large}" alt="Profile Picture">
+                                    <h3>${list[i].name.first} ${list[i].name.last}</h3>
+                                    <span class="email">${list[i].email}</span>
+                                 </div>
+                                 <div class="joined-details">
+                                    <span class="date">Joined ${list[i].registered.date}</span>
+                                 </div>`;
+            studentList.appendChild(listItem);
+         }
+         catch {
+            /* 
+               This try-catch block is for the last page, since the if statement has the loop run 9 times,
+               this catches the errors if the loop does not run 9 times 
+            */
+         }
       }
    }
 }
@@ -37,7 +45,6 @@ function showPage(list, page) {
 
 function addPagination(list) {
    let pages = list.length / 9;
-   console.log(pages)
    const linkList = document.querySelector('.link-list');
    linkList.innerHTML = '';
 
@@ -48,14 +55,19 @@ function addPagination(list) {
    }
    
    linkList.firstElementChild.firstElementChild.className = 'active'; // Sets the first page button to active by default
+   const listItems = document.querySelectorAll('.link-list li');
 
    linkList.addEventListener('click', function(event) {
-      const listItems = document.querySelectorAll('.link-list li'); // This selects the list items within the UL
-      for (let i = 0; i < listItems.length; i++) {
-         listItems[i].firstElementChild.className = '';
+      
+      if (event.target.tagName == "UL" || event.target.tagName == "LI") {
+         // This fixes the bug that changes the page if the user clicks in between the buttons
+      } else if (event.target.tagName == "BUTTON") {
+         for (let i = 0; i < listItems.length; i++) {
+            listItems[i].firstElementChild.className = '';
+         }
+         event.target.className = 'active';
+         showPage(list, event.target.textContent);
       }
-      event.target.className = 'active';
-      showPage(list, event.target.textContent)
    });
 }
 
